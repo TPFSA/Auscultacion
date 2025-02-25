@@ -6,7 +6,7 @@ class Sensor(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)  # Ejemplo: temperatura, humedad, etc.
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-
+    # localizacion
     
     def __str__(self):
         return self.name

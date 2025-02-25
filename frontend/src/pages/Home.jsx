@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Homee() {
+function Home() {
   return (
     <div>
       <div className="w-screen">
@@ -14,4 +14,4 @@ function Homee() {
   );
 }
 
-export default Homee;
+export default Home;

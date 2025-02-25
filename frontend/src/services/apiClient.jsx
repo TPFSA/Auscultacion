@@ -13,11 +13,10 @@ export const apiRequest = async (url, options = {}) => {
   }
 
   // Agregar encabezados
-  const headers = {
-    ...options.headers,
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-  };
+  const headers = options.body instanceof FormData
+    ? {} // Si es FormData, no agregamos 'Content-Type' (el navegador lo maneja)
+    : { "Content-Type": "application/json","Authorization" : `Bearer ${accessToken}`,  ...options.headers }
+    ;
 
   try {
     const response = await fetch(url, { ...options, headers });

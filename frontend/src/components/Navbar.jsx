@@ -50,6 +50,7 @@ const NavBar = () => {
         <div className="hidden xl:flex space-x-8">
           <NavLink to="/" linkName="Home" />
           {isAuthenticated && <NavLink to="/projects" linkName="Projects" />}
+          {isAuthenticated && <NavLink to="/excelform" linkName="Form" />}
         </div>
 
         {/* Botón de usuario */}

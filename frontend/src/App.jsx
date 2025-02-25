@@ -1,12 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Homee from "./pages/Home";
+import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Form from "./components/Form";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Projects from "./pages/Projects";
 import Project from "./pages/Project";
+import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./components/AuthContext";
 
 function App() {
@@ -17,9 +18,11 @@ function App() {
           <Navbar />
           <div className="text-gray-500 flex h-full">
           <Routes>
-            <Route path="/" element={<Homee />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/excelform" element={<Form />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<Project />} />
           </Routes>
