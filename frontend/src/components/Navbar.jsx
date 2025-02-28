@@ -102,7 +102,7 @@ const NavBar = () => {
 
       {/* Menú móvil */}
       {menuOpen && (
-        <div className="xl:hidden bg-white shadow-md absolute top-24 left-0 w-full z-50">
+        <div className="xl:hidden bg-white shadow-md absolute top-24 left-0 w-full z-600">
           <div className="flex flex-col p-4">
             <NavLink
               to="/"

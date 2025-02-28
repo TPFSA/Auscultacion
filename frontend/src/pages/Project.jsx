@@ -35,6 +35,8 @@ export default function Project() {
 
       const data = await response.json();
       setProject(data);
+      console.log(data);
+      
     } catch (error) {
       console.error("Error al usar Token Auth:", error.message);
     }
@@ -85,6 +87,10 @@ export default function Project() {
             <GoHomeFill style={{ width: 15, height: 15, fill: "#d97706" }} />
             <Link to={"/"}>
               <h1 className="text-gray-500">Home</h1>
+            </Link>
+            <FaArrowRight style={{ width: 15, height: 15, fill: "#d97706" }} />
+            <Link to={"/projects"}>
+              <h1 className="font-medium text-amber-600">Proyectos</h1>
             </Link>
             <FaArrowRight style={{ width: 15, height: 15, fill: "#d97706" }} />
             <Link to={"#"}>

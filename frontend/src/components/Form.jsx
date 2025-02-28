@@ -17,36 +17,6 @@ const Form = () => {
   const [keys, setKeys] = useState([]);
   const [resultData, setResultData] = useState(null); // Nuevo estado para almacenar los datos recibidos
 
-  const data = {
-    F1: [
-      {
-        data: "25/07/2023",
-        lectura: "2.49",
-      },
-      {
-        data: "26/10/2023",
-        lectura: "2.87",
-      },
-      {
-        data: "08/02/2024",
-        lectura: "3.05",
-      },
-    ],
-    F3: [
-      {
-        data: "25/07/2023",
-        lectura: "3.13",
-      },
-      {
-        data: "26/10/2023",
-        lectura: "3.44",
-      },
-      {
-        data: "08/02/2024",
-        lectura: "3.60",
-      },
-    ],
-  };
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
@@ -85,10 +55,7 @@ const Form = () => {
       }
 
       setKeys(Object.keys(data.data))
-      // const printindex = data.data.map((item, index) => (
-      // ))
-
-      // printindex()
+      console.log(data.data)
 const firstKey = keys[0]
 console.log(Object.keys(data.data))
 console.log(keys)

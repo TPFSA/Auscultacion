@@ -1,104 +1,85 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import L from "leaflet";
 
-import { FaArrowRight } from "react-icons/fa";
-import { GoHomeFill } from "react-icons/go";
-import { Link } from "react-router-dom";
-import { SiBim } from "react-icons/si";
-import { useNavigate } from "react-router-dom";
-import { IoArrowBackCircle } from "react-icons/io5";
+const Dashboard = () => {
+  const mapRef = useRef(null);
+  const [markers, setMarkers] = useState([
+    { id: 1, position: [41.515212, 2.149378] },
+    { id: 2, position: [41.516212, 2.148378] },
+    { id: 3, position: [41.517212, 2.150378] },
+  ]);
+  const calculo = [
+    { lectura: 1, diferencia: `` },
+    { lectura: 2, diferencia: "" },
+    { lectura: 3, diferencia: "" },
+  ];
 
-function Dashboard() {
-  // Navegación para regresar a la página principal
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate("/");
-  };
+  const primeraLectura = calculo[0].lectura;
 
-  // State hooks
-  const [lotes, setLotes] = useState([]);
-  const [filterText, setFilterText] = useState("");
-  const [filters, setFilters] = useState({
-    sector: "",
-    subSector: "",
-    parte: "",
-    elemento: "",
-    lote: "",
-    ppi: "",
-  });
-  const [uniqueValues, setUniqueValues] = useState({
-    sector: [],
-    subSector: [],
-    parte: [],
-    elemento: [],
-    lote: [],
-    ppi: [],
-  });
+  // Calcular la diferencia para cada elemento
+  const resultado = calculo.map((item) => ({
+    ...item,
+    diferencia: item.lectura - primeraLectura,
+  }));
+  console.log(resultado);
+  const [visibleMarkers, setVisibleMarkers] = useState([]);
 
-  const [noAptosPorSector, setNoAptosPorSector] = useState({});
-  const [totalNoAptos, setTotalNoAptos] = useState(0);
-  const [sectorSeleccionado, setSectorSeleccionado] = useState("Todos");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  function MapWithBounds() {
+    const map = useMap();
 
-  const handleOpenModal = (sector) => {
-    setSectorSeleccionado(sector);
-    setIsModalOpen(true);
-  };
+    useEffect(() => {
+      if (!mapRef.current) {
+        mapRef.current = map;
+      }
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSectorSeleccionado("");
-  };
+      const handleMove = () => {
+        const bounds = map.getBounds();
+        const visibleMarkers = markers.filter((marker) =>
+          bounds.contains(L.latLng(marker.position))
+        );
+        setVisibleMarkers(visibleMarkers);
+        console.log("Marcadores visibles:", visibleMarkers);
+      };
 
-  const timelineRef = useRef(null);
-  const aptoNoAptoRef = useRef(null);
-  const graficaLotesRef = useRef(null);
+      map.on("moveend", handleMove);
+
+      return () => {
+        map.off("moveend", handleMove);
+      };
+    }, [map]);
+
+    return null;
+  }
 
   return (
-    <div className="container mx-auto xl:px-14 py-2 text-gray-500 mb-10">
-      {/* Barra de navegación */}
-      <div className="flex items-center justify-between px-5 py-3 text-base">
-        <div className="flex gap-2 items-center w-100">
-          <GoHomeFill style={{ width: 15, height: 15, fill: "#d97706" }} />
-          <Link to={"/"}>
-            <h1 className="text-gray-500">Home</h1>
-          </Link>
-          <FaArrowRight style={{ width: 15, height: 15, fill: "#d97706" }} />
-          <Link to={"#"}>
-            <h1 className="font-medium text-amber-600">Dashboard</h1>
-          </Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex gap-3"></div>
-          <button className="text-amber-600 text-3xl" onClick={handleGoBack}>
-            <IoArrowBackCircle />
-          </button>
-        </div>
+    <div className="w-full flex">
+      <div className="w-1/2 h-full">
+        <MapContainer
+          center={[41.515212, 2.149378]}
+          zoom={20}
+          scrollWheelZoom={true}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {markers.map((marker) => (
+            <Marker key={marker.id} position={marker.position}>
+              <Popup>Marker ID: {marker.id}</Popup>
+            </Marker>
+          ))}
+          <MapWithBounds />
+        </MapContainer>
       </div>
-
-      <div className="w-full border-b-2 border-gray-200"></div>
-
-      <div className="flex flex-col items-start justify-center mt-2 bg-white p-4 rounded-xl">
-        <div className="flex justify-between w-full gap-4"></div>
-        {/* Filtros para la vista de gráficos */}
-
-        <div className="w-full">
-          <div className="my-5 grid xl:grid-cols-4 grid-cols-1 gap-5"></div>
-
-          {/* Gráficos y mapa */}
-
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 mb-4">
-            <div className="xl:col-span-2" ref={timelineRef}></div>
-            <div className="xl:col-span-1" ref={aptoNoAptoRef}></div>
-            <div className="xl:col-span-1" ref={graficaLotesRef}></div>
-          </div>
-        </div>
-
-        {/* Resumen por nivel */}
-
-        {/* Modal de Resumen de Sector */}
+      <div>
+        {visibleMarkers.map((index) => (
+          <div>{index.id}</div>
+        ))}
       </div>
     </div>
   );
-}
+};
 
 export default Dashboard;
