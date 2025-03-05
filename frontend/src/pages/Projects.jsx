@@ -10,12 +10,13 @@ export default function Projects() {
   const [projects, setProjects] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const token = localStorage.getItem("token");
+  const [isFinished, setIsFinished] = useState(false)
 
   useEffect(() => {
-    getAllProjects();
+    getAllFilteredProjects();
   }, []);
 
-  const getAllProjects = async (e) => {
+  const getAllFilteredProjects = async (e) => {
     if (e) e.preventDefault();
 
     try {
@@ -77,29 +78,36 @@ export default function Projects() {
           <FormModal
             isOpen={isOpen}
             onClose={() => {
-              setIsOpen(false), getAllProjects();
+              setIsOpen(false), getAllFilteredProjects();
             }}
           ></FormModal>
         )}
         {projects && (
           <div>
             <div className="flex justify-center">
-              
-              <button className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">Terminados</button>
-              <button className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">Pendientes</button>
+              <button className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2" onClick={()=>{setIsFinished(false)}}>
+                Pendientes
+              </button>
+              <button className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2" onClick={()=>{setIsFinished(true)}}>
+                Terminados
+              </button>
             </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4 mt-10 flex-wrap items-center mx-auto">
-            {projects.map((index) => (
-              <Link
-                to={`/projects/${index.id}`}
-                key={index.id}
-                className="bg-gray-300 flex flex-col p-4 rounded-xl hover:bg-gray-400"
-              >
-                <div>{index.title}</div>
-                <div>{index.creation_date}</div>
-              </Link>
-            ))}
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4 mt-10 flex-wrap items-center mx-auto">
+              {projects.map(function (index) {
+                if (index.finished == isFinished) {
+                  return (
+                    <Link
+                      to={`/projects/${index.id}`}
+                      key={index.id}
+                      className="bg-gray-300 flex flex-col p-4 rounded-xl hover:bg-gray-400"
+                    >
+                      <div>{index.title}</div>
+                      <div>{index.creation_date}</div>
+                    </Link>
+                  );
+                }
+              })}
+            </div>
           </div>
         )}
       </div>

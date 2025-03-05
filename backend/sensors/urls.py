@@ -3,8 +3,9 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'', views.SensorView, 'sensor')
+router.register(r'sensor', views.SensorView, 'sensor')
+router.register(r'sensor-coord', views.SensorCoordUpdateView, basename='sensor-coord')
 
 urlpatterns = [
-    path("sensor/", include(router.urls)),
+    path("", include(router.urls)),
 ]

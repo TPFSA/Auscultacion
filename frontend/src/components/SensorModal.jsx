@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { apiRequest } from "../services/apiClient";
 import { useParams } from "react-router-dom";
 
-export default function SensorModal({ isOpen, onClose }) {
-  if (!isOpen) return null; // No renderizar si no está abierto
+export default function SensorModal({ isEditSensorOpen, onClose }) {
+  if (!isEditSensorOpen) return null; // No renderizar si no está abierto
 
   const [sensor, setSensor] = useState("");
   const [coordx, setCoordx] = useState("");
@@ -13,6 +13,7 @@ export default function SensorModal({ isOpen, onClose }) {
   let params = useParams();
 
   const handleSubmit = async (e) => {
+    const coords = coordx == "" || coordy == "" ? null : `[${coordx}, ${coordy}]`
     e.preventDefault()
     try {
       const sensorResponse = await apiRequest("http://127.0.0.1:8000/sensor/", {
@@ -20,7 +21,7 @@ export default function SensorModal({ isOpen, onClose }) {
         body: JSON.stringify({
           name: sensor,
           valInicial: valInicial,
-          coord: `[${coordx}, ${coordy}]`,
+          coord: coords,
           type: "Termometer",
           project: `${params.id}`,
         }),
@@ -35,7 +36,7 @@ export default function SensorModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[999] flex items-center justify-center backdrop-blur-sm bg-gray-600/50">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-gray-600/50">
       <div className="relative m-4 p-4 w-2/5 min-w-[40%] max-w-[40%] rounded-lg bg-white shadow-sm">
         <form onSubmit={handleSubmit} className="bg-white text-gray-500  mb-4">
           <div className="grid sm:grid-cols-1 grid-cols-1 gap-4">

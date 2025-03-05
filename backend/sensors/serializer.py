@@ -5,3 +5,8 @@ class SensorSerializer (serializers.ModelSerializer):
     class Meta:
         model = Sensor
         fields = '__all__'
+
+class SensorCoordSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = Sensor
+        fields = ['coord']

@@ -1,7 +1,7 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Sensor
-from .serializer import SensorSerializer
+from .serializer import SensorSerializer, SensorCoordSerializer
 
 class SensorView(viewsets.ModelViewSet):
     serializer_class = SensorSerializer
@@ -18,3 +18,12 @@ class SensorView(viewsets.ModelViewSet):
         if project_id:
             queryset = queryset.filter(project_id=project_id)
         return queryset
+    
+class SensorCoordUpdateView(viewsets.GenericViewSet, mixins.UpdateModelMixin):
+    serializer_class = SensorCoordSerializer
+    queryset = Sensor.objects.all()
+    authentication_classes = [JWTAuthentication] 
+
+    def partial_update(self, request, *args, **kwargs):
+        """Permite actualizar solo el campo 'coord'."""
+        return super().partial_update(request, *args, **kwargs)
