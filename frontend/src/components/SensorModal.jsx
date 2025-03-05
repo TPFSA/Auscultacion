@@ -6,6 +6,9 @@ export default function SensorModal({ isOpen, onClose }) {
   if (!isOpen) return null; // No renderizar si no está abierto
 
   const [sensor, setSensor] = useState("");
+  const [coordx, setCoordx] = useState("");
+  const [coordy, setCoordy] = useState("");
+  const [valInicial, setValInicial] = useState("");
 
   let params = useParams();
 
@@ -16,6 +19,8 @@ export default function SensorModal({ isOpen, onClose }) {
         method: "POST",
         body: JSON.stringify({
           name: sensor,
+          valInicial: valInicial,
+          coord: `[${coordx}, ${coordy}]`,
           type: "Termometer",
           project: `${params.id}`,
         }),
@@ -44,6 +49,33 @@ export default function SensorModal({ isOpen, onClose }) {
                 placeholder="Nombre sensor"
                 value={sensor}
                 onChange={(e) => setSensor(e.target.value)}
+              />
+              <label className="block text-sm font-medium text-gray-800">
+                ValInicial
+              </label>
+              <input
+                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
+                type="number"
+                placeholder="ValInicial"
+                value={valInicial}
+                onChange={(e) => setValInicial(e.target.value)}
+              />
+              <label className="block text-sm font-medium text-gray-800">
+                Sensor coord
+              </label>
+              <input
+                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
+                type="number"
+                placeholder="Nombre coord"
+                value={coordx}
+                onChange={(e) => setCoordx(e.target.value)}
+              />
+              <input
+                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
+                type="number"
+                placeholder="Nombre coord"
+                value={coordy}
+                onChange={(e) => setCoordy(e.target.value)}
               />
             </div>
             <button

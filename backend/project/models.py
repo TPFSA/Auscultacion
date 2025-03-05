@@ -7,5 +7,8 @@ class Project(models.Model):
     finished = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    # fechafinal
+    # cliente
+
 def __str__(self):
         return self.title 

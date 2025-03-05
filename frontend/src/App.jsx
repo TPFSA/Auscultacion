@@ -22,7 +22,7 @@ function App() {
             <Route path="/excelform" element={<Form />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/:id" element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<Project />} />
           </Routes>

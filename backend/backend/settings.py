@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'users',
     'project',
     'sensors',
+    'sensor_data',
     'django',
     'backend',
     'rest_framework',

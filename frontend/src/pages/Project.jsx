@@ -35,8 +35,6 @@ export default function Project() {
 
       const data = await response.json();
       setProject(data);
-      console.log(data);
-      
     } catch (error) {
       console.error("Error al usar Token Auth:", error.message);
     }
@@ -53,6 +51,7 @@ export default function Project() {
         throw new Error(`Error HTTP: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data)
       setSensors(data);
     } catch (error) {
       console.log(error);
@@ -80,7 +79,7 @@ export default function Project() {
     navigate("/");
   };
   return (
-    <div className="container mx-auto xl:px-14 py-2 text-gray-500 mb-10">
+    <div className="container mx-auto px-4 py-2 text-gray-500 mb-10">
       <div className="max-w-screen-xl flex-wrap items-center mx-auto">
         <div className="flex items-center justify-between px-5 py-3 text-base">
           <div className="flex gap-2 items-center w-100">
@@ -104,7 +103,7 @@ export default function Project() {
             </button>
           </div>
         </div>
-      <div className="w-full border-b-2 border-gray-200"></div>
+        <div className="w-full border-b-2 border-gray-200"></div>
 
         {project && (
           <div className="px-4 max-w-screen-xl">
@@ -125,7 +124,7 @@ export default function Project() {
               Edit sensors
             </button>
             <Link
-              to="/dashboard"
+              to={`/dashboard/${project.id}`}
               className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
             >
               Dashboard

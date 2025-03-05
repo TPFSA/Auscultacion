@@ -19,9 +19,11 @@ from django.urls import include, path
 from rest_framework_simplejwt.views import TokenRefreshView
 from sensors.models import Sensor
 from project.models import Project
+from sensor_data.models import Sensor_data_dist
 
 admin.site.register(Sensor)
 admin.site.register(Project)
+admin.site.register(Sensor_data_dist)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +31,6 @@ urlpatterns = [
     path('form/', include('excelform.urls')),
     path('', include('project.urls')),
     path('', include('sensors.urls')),
+    path('', include('sensor_data.urls')),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
