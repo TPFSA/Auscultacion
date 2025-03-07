@@ -10,19 +10,22 @@ export default function Projects() {
   const [projects, setProjects] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const token = localStorage.getItem("token");
-  const [isFinished, setIsFinished] = useState(false)
+  const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
     getAllFilteredProjects();
-  }, []);
+  }, []);  
 
   const getAllFilteredProjects = async (e) => {
     if (e) e.preventDefault();
 
     try {
-      const response = await apiRequest("http://127.0.0.1:8000/project/", {
-        method: "GET",
-      });
+      const response = await apiRequest(
+        `${import.meta.env.VITE_BASE_URL}project/`,
+        {
+          method: "GET",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Error HTTP: ${response.status}`);
@@ -85,10 +88,20 @@ export default function Projects() {
         {projects && (
           <div>
             <div className="flex justify-center">
-              <button className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2" onClick={()=>{setIsFinished(false)}}>
+              <button
+                className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+                onClick={() => {
+                  setIsFinished(false);
+                }}
+              >
                 Pendientes
               </button>
-              <button className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2" onClick={()=>{setIsFinished(true)}}>
+              <button
+                className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+                onClick={() => {
+                  setIsFinished(true);
+                }}
+              >
                 Terminados
               </button>
             </div>

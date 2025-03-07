@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
-.map {
+#map {
   height: 300px;
+}
+
+.selected {
+  background-color: rgb(197, 206, 70);
 }
