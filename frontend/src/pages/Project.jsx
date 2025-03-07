@@ -10,13 +10,12 @@ import { apiRequest } from "../services/apiClient";
 import SensorModal from "../components/SensorModal";
 import SensorLocationModal from "../components/SensorLocationModal";
 import DataModal from "../components/AddDataModel";
-import { useSensors } from "../services/sensorHook";
+import { useSensors } from "../hooks/sensorHook";
+import { useProject } from "../hooks/projectHook";
 
 export default function Project() {
   let { id } = useParams();
   const mapRef = useRef(null);
-  const [project, setProject] = useState("");
-  // const [sensors, setSensors] = useState([]);
   const [markers, setMarkers] = useState([]);
   const [sensorId, setSensorId] = useState(null);
   const [refresh, setRefresh] = useState(null);
@@ -28,10 +27,7 @@ export default function Project() {
   const [isAddDataOpen, setIsAddDataOpen] = useState(false);
 
   const { sensors } = useSensors(id, refresh);
-
-  useEffect(() => {
-    getProject();
-  }, []);
+  const { project } = useProject(id)
 
   useEffect(() => {
     if (sensors.length > 0) {
@@ -56,18 +52,21 @@ export default function Project() {
 
       const handleMove = () => {
         const bounds = map.getBounds();
+        console.log("Move");
+        
         const visibleMarkers = markers.filter((marker) =>
           bounds.contains(L.latLng(marker.position))
         );
         setVisibleMarkers(visibleMarkers);
       };
+      
 
       map.on("moveend", handleMove);
 
       return () => {
         map.off("moveend", handleMove);
       };
-    }, [map]);
+    }, [map,sensors]);
 
     return null;
   };
@@ -79,22 +78,6 @@ export default function Project() {
       },
     });
     return null;
-  };
-  const getProject = async (e) => {
-    try {
-      const response = await apiRequest(`http://127.0.0.1:8000/project/${id}`, {
-        method: "GET",
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setProject(data);
-    } catch (error) {
-      console.error("Error al usar Token Auth:", error.message);
-    }
   };
 
   const handleGoBack = () => {
@@ -108,10 +91,7 @@ export default function Project() {
     const selectedSensors = document.querySelectorAll(".selected");
 
     // Convertimos el NodeList en un array y extraemos los IDs
-    const selectedIds = [...selectedSensors].map((sensor) => sensor.id);
-    console.log(markers);
-
-    console.log(selectedIds); // Array con los IDs seleccionados
+    const selectedIds = [...selectedSensors].map((sensor) => sensor.id); 
   };
 
   const deleteProject = async (e) => {

@@ -6,7 +6,6 @@ export default function FormModal({ isOpen, onClose }) {
   const [title, setTitle] = useState("");
   const [creationDate, setCreationDate] = useState("");
   const [sensor, setSensor] = useState("");
-  const token = localStorage.getItem("token");
   const storedUser = localStorage.getItem("user");
 
   useEffect(()=>{
@@ -38,18 +37,22 @@ export default function FormModal({ isOpen, onClose }) {
       }
 
       const data = await response.json();
-      const sensorResponse = await apiRequest("http://127.0.0.1:8000/sensor/", {
-        method: "POST",
-        body: JSON.stringify({
-          name: sensor,
-          type: "Termometer",
-          project: data.id,
-        }),
-      });
-      if (!sensorResponse.ok) {
-        throw new Error(`Error HTTP: ${sensorResponse.status}`);
+      if (sensor != ""){ 
+        const sensorResponse = await apiRequest("http://127.0.0.1:8000/sensor/", {
+          method: "POST",
+          body: JSON.stringify({
+            name: sensor,
+            type: "Termometer",
+            project: data.id,
+          }),
+        });
+        if (!sensorResponse.ok) {
+          throw new Error(`Error HTTP: ${sensorResponse.status}`);
+        }
+        onClose();
+      } else {
+        onClose()
       }
-      onClose();
     } catch (error) {
       console.error("Error al usar Token Auth:", error.message);
     }

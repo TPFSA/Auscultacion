@@ -12,16 +12,18 @@ export default function Projects() {
   const token = localStorage.getItem("token");
   const [isFinished, setIsFinished] = useState(false);
 
+  const storedUser = localStorage.getItem("user");
+
   useEffect(() => {
     getAllFilteredProjects();
   }, []);  
 
   const getAllFilteredProjects = async (e) => {
     if (e) e.preventDefault();
-
+    
     try {
       const response = await apiRequest(
-        `${import.meta.env.VITE_BASE_URL}project/`,
+        `${import.meta.env.VITE_BASE_URL}project/?user_id=${JSON.parse(storedUser).id}`,
         {
           method: "GET",
         }

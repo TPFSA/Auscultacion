@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiRequest } from "./apiClient";
+import { apiRequest } from "../services/apiClient";
 
 const API_URL = import.meta.env.VITE_BASE_URL
 
