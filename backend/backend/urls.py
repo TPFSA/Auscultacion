@@ -21,9 +21,6 @@ from sensors.models import Sensor
 from project.models import Project
 from sensor_data.models import Sensor_data_dist
 
-admin.site.register(Sensor)
-admin.site.register(Project)
-admin.site.register(Sensor_data_dist)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

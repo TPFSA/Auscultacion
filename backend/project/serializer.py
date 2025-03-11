@@ -5,3 +5,8 @@ class ProjectSerializer (serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = '__all__'
+
+class FinishedSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['finished']

@@ -8,8 +8,6 @@ export const useSensors = (projectId, refresh) => {
 
   useEffect(() => {
     const fetchSensors = async () => {
-      console.log("asd");
-      
       try {
         const response = await apiRequest(
           `${API_URL}sensor/?project_id=${projectId}`,

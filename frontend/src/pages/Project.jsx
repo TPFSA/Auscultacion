@@ -12,6 +12,7 @@ import SensorLocationModal from "../components/SensorLocationModal";
 import DataModal from "../components/AddDataModel";
 import { useSensors } from "../hooks/sensorHook";
 import { useProject } from "../hooks/projectHook";
+import { useData } from "../hooks/dataHook";
 
 export default function Project() {
   let { id } = useParams();
@@ -19,6 +20,7 @@ export default function Project() {
   const [markers, setMarkers] = useState([]);
   const [sensorId, setSensorId] = useState(null);
   const [refresh, setRefresh] = useState(null);
+  const [ids, setIds] = useState(null)
 
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const navigate = useNavigate();
@@ -27,7 +29,8 @@ export default function Project() {
   const [isAddDataOpen, setIsAddDataOpen] = useState(false);
 
   const { sensors } = useSensors(id, refresh);
-  const { project } = useProject(id)
+  const { project } = useProject(id);
+  const { sensorsData } = useData(ids);
 
   useEffect(() => {
     if (sensors.length > 0) {
@@ -37,6 +40,7 @@ export default function Project() {
           id: sensor.id,
           name: sensor.name,
           position: JSON.parse(sensor.coord),
+          valInicial: JSON.parse(sensor.valInicial),
         }));
       setMarkers([...newMarkers]);
     }
@@ -52,31 +56,20 @@ export default function Project() {
 
       const handleMove = () => {
         const bounds = map.getBounds();
-        console.log("Move");
-        
+
         const visibleMarkers = markers.filter((marker) =>
           bounds.contains(L.latLng(marker.position))
         );
         setVisibleMarkers(visibleMarkers);
       };
-      
 
       map.on("moveend", handleMove);
 
       return () => {
         map.off("moveend", handleMove);
       };
-    }, [map,sensors]);
+    }, [map, sensors]);
 
-    return null;
-  };
-
-  const LocationFinderDummy = () => {
-    const map = useMapEvents({
-      click(e) {
-        console.log(e.latlng);
-      },
-    });
     return null;
   };
 
@@ -91,7 +84,9 @@ export default function Project() {
     const selectedSensors = document.querySelectorAll(".selected");
 
     // Convertimos el NodeList en un array y extraemos los IDs
-    const selectedIds = [...selectedSensors].map((sensor) => sensor.id); 
+    const selectedIds = [...selectedSensors].map((sensor) => sensor.id);
+    setIds(selectedIds)
+    navigate("/dashboard")
   };
 
   const deleteProject = async (e) => {
@@ -112,6 +107,27 @@ export default function Project() {
     }
   };
 
+  const finishProject = async (e) => {
+    try {
+      const response = await apiRequest(
+        `http://127.0.0.1:8000/project-finish/${id}/`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            "finished": true
+          })
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.data}`);
+      }
+      const data = await response.json();
+      navigate("/projects")
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="container mx-auto px-4 py-2 text-gray-500 mb-10">
       <div className="max-w-screen-xl flex-wrap h-full items-center mx-auto">
@@ -146,7 +162,7 @@ export default function Project() {
             <h1 className="text-7xl">{project.title}</h1>
             {/*Mapa con lista*/}
             <div className="w-full h-1/2 flex mt-4">
-              <div className="h-full w-full">
+              <div className="h-full w-full rounded-md">
                 <MapContainer
                   center={[41.515212, 2.149378]}
                   zoom={20}
@@ -169,10 +185,9 @@ export default function Project() {
                     );
                   })}
                   <MapWithBounds />
-                  <LocationFinderDummy />
                 </MapContainer>
               </div>
-              <div className="bg-amber-400 ml-2 p-4 w-full">
+              <div className="bg-gray-200 ml-2 p-4 w-full">
                 <h1 className="justify-center text-4xl flex mb-6 mt-6">
                   Sensors list
                 </h1>
@@ -184,7 +199,7 @@ export default function Project() {
                       onClick={(e) => {
                         e.target.classList.toggle("selected");
                       }}
-                      className="rounded bg-amber-200 hover:bg-amber-700 mb-1 p-2 font-medium"
+                      className="rounded bg-gray-300 hover:bg-gray-400 mb-1 p-2 font-medium"
                     >
                       {index.name}
                     </button>
@@ -218,16 +233,19 @@ export default function Project() {
                 isEditCoordOpen={isEditCoordOpen}
                 id={sensorId}
                 onClose={() => {
-                  setIsEditCoordOpen(false); setRefresh((prev) => !prev);
+                  setIsEditCoordOpen(false);
+                  setRefresh((prev) => !prev);
                 }}
               ></SensorLocationModal>
             )}
             {/*Todos los botones agrupados*/}
-            <div>
+            <div className="gap-2 flex mt-3">
               <button
-                className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+                className="btn"
                 onClick={() => {
                   setIsAddDataOpen(true);
+                  console.log(sensorsData);
+                  
                 }}
               >
                 Add data
@@ -237,7 +255,8 @@ export default function Project() {
                 <DataModal
                   isAddDataOpen={isAddDataOpen}
                   onClose={() => {
-                    setIsAddDataOpen(false); setRefresh((prev) => !prev)
+                    setIsAddDataOpen(false);
+                    setRefresh((prev) => !prev);
                   }}
                 ></DataModal>
               )}
@@ -246,7 +265,7 @@ export default function Project() {
                 onClick={() => {
                   setIsEditSensorOpen(true);
                 }}
-                className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+                className="btn-default btn"
               >
                 Edit sensors
               </button>
@@ -255,24 +274,33 @@ export default function Project() {
                 <SensorModal
                   isEditSensorOpen={isEditSensorOpen}
                   onClose={() => {
-                    setIsEditSensorOpen(false); setRefresh((prev) => !prev)
+                    setIsEditSensorOpen(false);
+                    setRefresh((prev) => !prev);
                   }}
                 ></SensorModal>
               )}
               <Link
                 // to={`/dashboard/${project.id}`}
-                className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+                className="btn"
                 onClick={handleDashboard}
               >
                 Dashboard
                 {/* Nueva pestaña para enseñar todos los graficos */}
               </Link>
-              <button
+              <Link
                 onClick={deleteProject}
-                className="rounded-md bg-red-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+                className="btn bg-red-800 hover:bg-red-900 ml-auto"
               >
                 Delete Project
-              </button>
+              </Link>
+              {!project.finished && (
+                <Link
+                  onClick={finishProject}
+                  className="btn bg-red-800 hover:bg-red-900"
+                >
+                  Terminar
+                </Link>
+              )}
             </div>
           </div>
         )}

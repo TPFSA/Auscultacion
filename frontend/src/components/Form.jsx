@@ -26,7 +26,6 @@ const Form = () => {
         setError("");
       } else {
         setFile(null);
-        console.log("AAA");
         setError("Solo se permiten archivos Excel (.xls, .xlsx)");
       }
     }
@@ -54,11 +53,17 @@ const Form = () => {
         throw new Error(data.message || "Error al subir el archivo");
       }
 
-      setKeys(Object.keys(data.data))
-      console.log(data.data)
-const firstKey = keys[0]
-console.log(Object.keys(data.data))
-console.log(keys)
+      setKeys(Object.keys(data.data));
+      const firstKey = keys[0];
+      
+      Object.keys(data.data).forEach(key => {
+        data.data[key].forEach(key => {
+          console.log(key);
+          
+        })
+      })
+      console.log(Object.keys(data.data));
+      console.log(keys);
       const mergedData = data.data.F1.map((item, index) => ({
         date: item.data, // Eje X (Fechas)
         [Object.keys(data.data)[0]]: parseFloat(item.diferencia), // Diferencia de F1

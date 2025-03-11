@@ -26,7 +26,7 @@ def process_excel(request):
             new_columns = []
             for col in df.columns:
                 try:
-                    new_col = pd.to_datetime(col, dayfirst=True).strftime("%d-%m-%Y")
+                    new_col = pd.to_datetime(col, dayfirst=True).strftime("%Y-%m-%d")
                 except Exception:
                     new_col = col  # Mantener el nombre original si no es una fecha
                 new_columns.append(new_col)
@@ -45,7 +45,7 @@ def process_excel(request):
                     difference = Decimal(str(value)) - Decimal(first_value) if first_value is not None else Decimal(str(value))
                     difference = difference.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
-                    result[index].append({"data": col_name, "lectura": str(value), "diferencia": str(difference)})
+                    result[index].append({"data": col_name, "lectura": str(value), "diferencia": str(difference), "valInicial": str(first_value)})
 
             return JsonResponse({'status': 'success', 'data': result})
         

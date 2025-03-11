@@ -26,6 +26,7 @@ export default function DataModal({ isAddDataOpen, onClose}) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(typeof(date))
     try {
       const dataResponse = await apiRequest(
         "http://127.0.0.1:8000/sensor_data_dist/",
@@ -59,7 +60,6 @@ export default function DataModal({ isAddDataOpen, onClose}) {
         throw new Error(`Error HTTP: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data)
       setSensors(data);
     } catch (error) {
       console.log(error);
@@ -69,13 +69,15 @@ export default function DataModal({ isAddDataOpen, onClose}) {
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-gray-600/50">
       <div className="relative m-4 p-4 w-2/5 min-w-[40%] max-w-[40%] rounded-lg bg-white shadow-sm">
-        <form onSubmit={handleSubmit} className="bg-white text-gray-500  mb-4">
+        <form onSubmit={handleSubmit} className="bg-white text-gray-500">
             {!selectedSensor && sensors && (
-                <div>
+                <div className=" flex flex-col gap-2">
                     {sensors.map((index)=> (
-                    <div key={index.id} id={index.id} onClick={()=>setSelectedSensor(index.id)}>{index.name}</div>
+                    <div key={index.id} id={index.id} className="btn" onClick={()=>setSelectedSensor(index.id)}>{index.name}</div>
                 ))}
+                <button className="btn bg-red-300" onClick={()=> onClose()}>Close</button>
                 </div>
+                
             )}
           {selectedSensor && (
             <div className="grid sm:grid-cols-1 grid-cols-1 gap-4">

@@ -9,6 +9,7 @@ import Projects from "./pages/Projects";
 import Project from "./pages/Project";
 import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./components/AuthContext";
+import { ProjectProvider } from "./context/projectContext";
 
 function App() {
   return (
@@ -17,15 +18,37 @@ function App() {
         <div className="flex flex-col h-screen">
           <Navbar />
           <div className="text-gray-500 flex h-full">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/excelform" element={<Form />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/dashboard/:id" element={<Dashboard />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:id" element={<Project />} />
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/excelform" element={<Form />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+
+              <Route
+                path="/dashboard"
+                element={
+                  <ProjectProvider>
+                    <Dashboard />
+                  </ProjectProvider>
+                }
+              />
+              <Route
+                path="/projects"
+                element={
+                  <ProjectProvider>
+                    <Projects />
+                  </ProjectProvider>
+                }
+              />
+              <Route
+                path="/projects/:id"
+                element={
+                  <ProjectProvider>
+                    <Project />
+                  </ProjectProvider>
+                }
+              />
+            </Routes>
           </div>
         </div>
       </Router>
