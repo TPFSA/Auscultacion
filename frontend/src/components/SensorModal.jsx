@@ -6,6 +6,7 @@ export default function SensorModal({ isEditSensorOpen, onClose }) {
   if (!isEditSensorOpen) return null; // No renderizar si no está abierto
 
   const [sensor, setSensor] = useState("");
+  const [type, setType] = useState("");
   const [coordx, setCoordx] = useState("");
   const [coordy, setCoordy] = useState("");
   const [valInicial, setValInicial] = useState("");
@@ -38,7 +39,7 @@ export default function SensorModal({ isEditSensorOpen, onClose }) {
           name: sensor,
           valInicial: valInicial,
           coord: coords,
-          type: "Termometer",
+          type: type,
           project: `${params.id}`,
         }),
       });
@@ -92,14 +93,11 @@ export default function SensorModal({ isEditSensorOpen, onClose }) {
           }
   
           const sensor = await sensorResponse.json();
-          console.log(sensor);
   
           for (const entry of data.data[key]) {
-            console.log(sensor.id, entry.lectura, entry.data);
-            console.log(entry.data);
             try {
               const dataResponse = await apiRequest(
-                "http://127.0.0.1:8000/sensor_data_dist/",
+                "http://127.0.0.1:8000/sensor_data_piezometro/",
                 {
                   method: "POST",
                   body: JSON.stringify({
@@ -136,15 +134,13 @@ export default function SensorModal({ isEditSensorOpen, onClose }) {
           <div className="grid sm:grid-cols-1 grid-cols-1 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-800">
-                Sensor name
+                Nombre del sensor
               </label>
-              <input
-                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
-                type="text"
-                placeholder="Nombre sensor"
-                value={sensor}
-                onChange={(e) => setSensor(e.target.value)}
-              />
+              <select id="sensor-name" name="sensor-name" onChange={(e) => setSensor(e.target.value)}>
+                <option value="Termometer">Termometer</option>
+                <option value="Extensometro">Extensometro</option>
+                <option value="Piezometro">Piezometro</option>
+              </select>
               <label className="block text-sm font-medium text-gray-800">
                 ValInicial
               </label>
@@ -172,6 +168,14 @@ export default function SensorModal({ isEditSensorOpen, onClose }) {
                 value={coordy}
                 onChange={(e) => setCoordy(e.target.value)}
               />
+              <label className="block text-sm font-medium text-gray-800">
+                Tipo
+              </label>
+              <select id="types" name="types" onChange={(e) => setType(e.target.value)}>
+                <option value="Termometer">Termometer</option>
+                <option value="Extensometro">Extensometro</option>
+                <option value="Piezometro">Piezometro</option>
+              </select>
             </div>
             <div className="flex">
               <div className="w-full border-b-2 border-gray-200"></div>O

@@ -8,9 +8,9 @@ export default function FormModal({ isOpen, onClose }) {
   const [sensor, setSensor] = useState("");
   const storedUser = localStorage.getItem("user");
 
-  useEffect(()=>{
-    setCreationDate(getDate())
-  }, [])
+  useEffect(() => {
+    setCreationDate(getDate());
+  }, []);
 
   function getDate() {
     const today = new Date();
@@ -35,24 +35,7 @@ export default function FormModal({ isOpen, onClose }) {
       if (!response.ok) {
         throw new Error(`Error HTTP: ${response.status}`);
       }
-
-      const data = await response.json();
-      if (sensor != ""){ 
-        const sensorResponse = await apiRequest("http://127.0.0.1:8000/sensor/", {
-          method: "POST",
-          body: JSON.stringify({
-            name: sensor,
-            type: "Termometer",
-            project: data.id,
-          }),
-        });
-        if (!sensorResponse.ok) {
-          throw new Error(`Error HTTP: ${sensorResponse.status}`);
-        }
-        onClose();
-      } else {
-        onClose()
-      }
+      onClose();
     } catch (error) {
       console.error("Error al usar Token Auth:", error.message);
     }
@@ -84,20 +67,7 @@ export default function FormModal({ isOpen, onClose }) {
                 type="date"
                 value={creationDate}
                 onChange={(e) => setCreationDate(e.target.value)}
-                />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-800">
-              Sensor name
-              </label>
-    
-            <input
-                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500"
-              type="text"
-              placeholder="Nombre sensor"
-              value={sensor}
-              onChange={(e) => setSensor(e.target.value)}
-            />
+              />
             </div>
             <button
               type="submit"

@@ -30,5 +30,5 @@ export const useProject = (id) => {
     if (id) fetchProject()
   }, [id]);
 
-  return { project };
+  return { project, setProject };
 };

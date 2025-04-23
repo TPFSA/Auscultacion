@@ -56,14 +56,6 @@ const Form = () => {
       setKeys(Object.keys(data.data));
       const firstKey = keys[0];
       
-      Object.keys(data.data).forEach(key => {
-        data.data[key].forEach(key => {
-          console.log(key);
-          
-        })
-      })
-      console.log(Object.keys(data.data));
-      console.log(keys);
       const mergedData = data.data.F1.map((item, index) => ({
         date: item.data, // Eje X (Fechas)
         [Object.keys(data.data)[0]]: parseFloat(item.diferencia), // Diferencia de F1
@@ -73,7 +65,6 @@ const Form = () => {
       }));
 
       setResultData(mergedData);
-      console.log(mergedData);
       // Guardar los datos en el estado
       setFile(null);
     } catch (error) {

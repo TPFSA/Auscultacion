@@ -19,7 +19,6 @@ from django.urls import include, path
 from rest_framework_simplejwt.views import TokenRefreshView
 from sensors.models import Sensor
 from project.models import Project
-from sensor_data.models import Sensor_data_dist
 
 
 urlpatterns = [

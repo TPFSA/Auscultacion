@@ -24,9 +24,9 @@ export const ProjectProvider = ({ children }) => {
 
       const data = await response.json();
       setProject(data);
-      fetchSensors(data.id);
+      await fetchSensors(data.id);
     } catch (error) {
-      console.error("Error al usar Token Auth:", error.message);
+      console.error("Error en el proyecto:", error.message);
     }
   };
 
@@ -44,7 +44,7 @@ export const ProjectProvider = ({ children }) => {
       const data = await response.json();
       setSensors(data);
     } catch (error) {
-      console.log(error);
+      console.error("Error en el fetch sensores:", error.message);
     }
   };
 
@@ -62,15 +62,24 @@ export const ProjectProvider = ({ children }) => {
       }
 
       const data = await response.json();
+      console.log(`sensor data : ${data}` );
+      
       setSensorsData(data);
     } catch (error) {
-      console.error("Error al usar Token Auth:", error.message);
+      console.error("Error en el fetch de sensor Data:", error.message);
     }
   };
 
   return (
     <ProjectContext.Provider
-      value={{ project, fetchProject, sensors, sensorsData }}
+      value={{
+        project,
+        fetchProject,
+        sensors,
+        sensorsData,
+        fetchSensorData,
+        fetchSensors,
+      }}
     >
       {children}
     </ProjectContext.Provider>

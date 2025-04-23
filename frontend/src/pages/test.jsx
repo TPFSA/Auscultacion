@@ -6,7 +6,6 @@ import { FaArrowRight } from "react-icons/fa";
 import { useState } from "react";
 import { useData } from "../hooks/dataHook";
 import { useProjectData } from "../context/projectContext";
-import { format } from "date-fns"; 
 import {
   LineChart,
   Line,
@@ -22,17 +21,18 @@ const Dashboard = () => {
   const [resultData, setResultData] = useState("");
   const [minDate, setMinDate] = useState(null);
   const [maxDate, setMaxDate] = useState(null);
+  // const { sensorsData } = useData();
 
   const { sensorsData, project } = useProjectData();
 
   const handleGoBack = () => {
-    navigate("/"); // Se necesita importar `navigate` si no se ha hecho.
+    navigate("/");
   };
 
   const sensorGroups = sensorsData.reduce((acc, item) => {
     const sensorName = item.sensor_name; // ID del sensor
     const date = new Date(item.date); // Convertimos a objeto Date
-    
+
     if (!acc[sensorName]) acc[sensorName] = []; // Si no existe el array, lo creamos
     acc[sensorName].push({
       date: date.getTime(), // Usamos getTime() para convertir la fecha a milisegundos
@@ -53,10 +53,6 @@ const Dashboard = () => {
   const sensorKeys = Object.keys(sensorGroups);
 
   const getColorFromIndex = (index) => `hsl(${(index * 137) % 360}, 70%, 50%)`;
-
-  const formatDate = (timestamp) => {
-    return format(new Date(timestamp), "dd/MM/yyyy"); // O cualquier formato que desees
-  };
 
   return (
     <div className="container mx-auto px-4 py-2 text-gray-500 mb-10">
@@ -96,16 +92,20 @@ const Dashboard = () => {
               dataKey="date"
               type="number" // Usa "number" para trabajar con fechas en milisegundos
               domain={[minDate, maxDate]} // Ajustamos el dominio con las fechas mínimas y máximas
-              tickFormatter={(tick) => formatDate(tick)} // Formateamos la fecha para mostrarla en el eje X
+              tickFormatter={(tick) => {
+                const date = new Date(tick);
+                return `${date.getMonth() + 1}/${date.getFullYear()}`;
+              }} // Formateamos la fecha para mostrar mes/año
             />
             <YAxis />
-            <Tooltip 
-              labelFormatter={(label) => formatDate(label)} // Formateamos la fecha en el Tooltip
-            />
+            <Tooltip />
             <Legend />
+
+            {/* Dibujar una línea por cada sensor */}
             {sensorKeys.map((sensorId, index) => (
               <Line
                 key={sensorId}
+                type="monotone"
                 data={sensorGroups[sensorId]}
                 dataKey="valDiferencia"
                 name={`${sensorId}`}

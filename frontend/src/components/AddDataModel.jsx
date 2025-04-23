@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { apiRequest } from "../services/apiClient";
 
-export default function DataModal({ isAddDataOpen, onClose}) {
+export default function DataModal({ isAddDataOpen, onClose, loading}) {
   if (!isAddDataOpen) return null; // No renderizar si no está abierto
   let params = useParams();
 
@@ -26,10 +26,9 @@ export default function DataModal({ isAddDataOpen, onClose}) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(typeof(date))
     try {
       const dataResponse = await apiRequest(
-        "http://127.0.0.1:8000/sensor_data_dist/",
+        "http://127.0.0.1:8000/sensor_data_piezometro/",
         {
           method: "POST",
           body: JSON.stringify({
